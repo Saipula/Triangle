@@ -15,6 +15,19 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 	: TForm(Owner)
 {
 }
+
+void recolor(short GroupNum){
+	for (short i = 0; i < Form1->ComponentCount; i++) {
+		if(Form1->Components[i]->ClassNameIs("TGroupBox")){
+			TGroupBox *tmp = ((TGroupBox*)Form1->Components[i]);
+			if(tmp->Name == ("GroupBox" + String(GroupNum)))
+				tmp->Font->Color = clGreen;
+			else
+				tmp->Font->Color = clRed;
+		}
+	}
+}
+
 //---------------------------------------------------------------------------
 
 void show(Base *t1){
@@ -32,6 +45,8 @@ void show(Base *t1){
 
 void __fastcall TForm1::Button1Click(TObject *Sender)
 {
+	recolor(1);
+
 	t1 = new _2stor();
 			
 	if (Edit1->Text != "" && Edit2->Text != "" && Edit3->Text != "") {
@@ -40,12 +55,14 @@ void __fastcall TForm1::Button1Click(TObject *Sender)
 	}
 	
 	else{
-		ShowMessage("Заповніть всі поля!");
+		ShowMessage("Fill in all fields!");
 	}                  
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Button2Click(TObject *Sender)
 {
+	recolor(2);
+
 	t1 = new _3stor();
 	float A, B, C;
 	A = StrToFloat(Edit4->Text);
@@ -57,20 +74,30 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
 		show(t1);
 	}
 	else
-		ShowMessage("Сторони вказані неправильно!");
+		ShowMessage("The parties are incorrect!");
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Edit4KeyPress(TObject *Sender, System::WideChar &Key)
 {
 	char *str = "0123456789,"; // задание строки допустимых элементов
+	TEdit* edt= dynamic_cast<TEdit*>(Sender);
+
 	if (((int)Key==8)) return; // разрешение использовать BackSpace и Enter
 	if (!( AnsiStrScan( str, Key))) // проверка на соответствии вводимого элемента допустимым элементам приведенным в строке
-		Key = NULL; // если вводимый символ не обнаружен в строке допустимых элементов, значит он отсутствует	
+		Key = NULL; // если вводимый символ не обнаружен в строке допустимых элементов, значит он отсутствует
+	else
+		for (short i = 0; i < edt->Text.Length(); i++)
+			if(edt->Text[i+1] == ',' && Key == ','){
+				Key = NULL;
+				break;
+			}
 }
 
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Button3Click(TObject *Sender)
-{      
+{
+	recolor(3);
+
 	t1 = new _naprotiv();
 
 	if (Edit7->Text != "" && Edit8->Text != "" && Edit9->Text != "") {
@@ -79,12 +106,14 @@ void __fastcall TForm1::Button3Click(TObject *Sender)
 	}
 	
 	else{
-		ShowMessage("Заповніть всі поля!");
+		ShowMessage("Fill in all fields!");
 	} 
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Button4Click(TObject *Sender)
 {
+	recolor(4);
+
 	t1 = new _kutiki();
 	float a, B, C;
 	a = StrToFloat(Edit10->Text);
@@ -96,7 +125,7 @@ void __fastcall TForm1::Button4Click(TObject *Sender)
 		show(t1);
 	}
 	else
-		ShowMessage("Задача не має розвязку!");
+		ShowMessage("The problem has no solution!");
 }
 //---------------------------------------------------------------------------
 
